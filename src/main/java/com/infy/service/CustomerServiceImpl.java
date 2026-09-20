@@ -5,8 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import jakarta.transaction.Transactional;
-
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.infy.dto.CustomerDTO;
@@ -18,13 +16,11 @@ import com.infy.repository.CustomerRepository;
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
 
-	CustomerServiceImpl(CustomerRepository customerRepository, Environment environment) {
+	CustomerServiceImpl(CustomerRepository customerRepository) {
 		this.customerRepository = customerRepository;
-		this.environment = environment;
 	}
 
 	private final CustomerRepository customerRepository;
-	final Environment environment;
 
 	@Override
 	public List<CustomerDTO> getAllCustomers() throws InfyBankException {
@@ -70,7 +66,6 @@ public class CustomerServiceImpl implements CustomerService {
 		Optional<Customer> optional = customerRepository.findById(customerId);
 		Customer customer = optional.orElseThrow(() -> new InfyBankException("Service.CUSTOMER_NOT_FOUND"));
 		customer.setEmailId(emailId);
-
 	}
 
 	@Override
@@ -78,7 +73,6 @@ public class CustomerServiceImpl implements CustomerService {
 		Optional<Customer> customer = customerRepository.findById(customerId);
 		customer.orElseThrow(() -> new InfyBankException("Service.CUSTOMER_NOT_FOUND"));
 		customerRepository.deleteById(customerId);
-
 	}
 
 }
