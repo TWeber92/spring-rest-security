@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,10 +28,13 @@ import com.infy.service.CustomerService;
 @Validated
 public class CustomerAPI {
 
-	@Autowired
-	CustomerService customerService;
-	@Autowired
-	Environment environment;
+	CustomerAPI(Environment environment, CustomerService customerService) {
+		this.environment = environment;
+		this.customerService = customerService;
+	}
+
+	private final CustomerService customerService;
+	private final Environment environment;
 
 	@GetMapping("/customers")
 	public ResponseEntity<List<CustomerDTO>> getAllCustomers() throws InfyBankException {

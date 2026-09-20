@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import jakarta.transaction.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +18,13 @@ import com.infy.repository.CustomerRepository;
 @Transactional
 public class CustomerServiceImpl implements CustomerService {
 
-	@Autowired
-	CustomerRepository customerRepository;
-	@Autowired
-	Environment environment;
+	CustomerServiceImpl(CustomerRepository customerRepository, Environment environment) {
+		this.customerRepository = customerRepository;
+		this.environment = environment;
+	}
+
+	private final CustomerRepository customerRepository;
+	final Environment environment;
 
 	@Override
 	public List<CustomerDTO> getAllCustomers() throws InfyBankException {

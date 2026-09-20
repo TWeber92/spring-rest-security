@@ -7,7 +7,6 @@ import jakarta.validation.ConstraintViolationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +19,13 @@ import com.infy.exception.InfyBankException;
 @RestControllerAdvice
 public class ExceptionControllerAdvise {
 
+	ExceptionControllerAdvise(Environment environment) {
+		this.environment = environment;
+	}
+
 	private static final Log LOGGER = LogFactory.getLog(ExceptionControllerAdvise.class);
 
-	@Autowired
-	Environment environment;
+	final Environment environment;
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ErrorInfo> exceptionHandler(Exception exception) {
