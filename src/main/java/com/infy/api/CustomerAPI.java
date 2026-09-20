@@ -17,13 +17,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.infy.dto.CustomerDTO;
 import com.infy.exception.InfyBankException;
 import com.infy.service.CustomerService;
 
-@RestControllerAdvice
+@RestController
 @RequestMapping("/infybank")
 @Validated
 public class CustomerAPI {
@@ -58,15 +58,16 @@ public class CustomerAPI {
 	}
 
 	@PutMapping("/customer/{customerId}")
-	public ResponseEntity<String> updateCustomer(Integer customerId, String emailId) throws InfyBankException {
-		customerService.updateCustomer(customerId, emailId);
+	public ResponseEntity<String> updateCustomer(@PathVariable Integer customerId, @RequestBody CustomerDTO customerDTO)
+			throws InfyBankException {
+		customerService.updateCustomer(customerId, customerDTO.getEmailId());
 		String successMsg = environment.getProperty("API.UPDATE_SUCCESS");
 		return new ResponseEntity<String>(successMsg, HttpStatus.OK);
 	}
 
 	@DeleteMapping("/customer/{customerId}")
-	public ResponseEntity<String> deleteCustomer(Integer customer) throws InfyBankException {
-		customerService.deleteCustomer(customer);
+	public ResponseEntity<String> deleteCustomer(@PathVariable Integer customerId) throws InfyBankException {
+		customerService.deleteCustomer(customerId);
 		String successMsg = environment.getProperty("API.DELETE_SUCCESS");
 		return new ResponseEntity<String>(successMsg, HttpStatus.OK);
 	}
