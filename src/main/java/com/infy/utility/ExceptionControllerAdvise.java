@@ -3,7 +3,7 @@ package com.infy.utility;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
-import javax.validation.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,7 +19,7 @@ import com.infy.exception.InfyBankException;
 
 @RestControllerAdvice
 public class ExceptionControllerAdvise {
-	
+
 	private static final Log LOGGER = LogFactory.getLog(ExceptionControllerAdvise.class);
 
 	@Autowired
@@ -34,15 +34,16 @@ public class ExceptionControllerAdvise {
 		return new ResponseEntity<ErrorInfo>(errInfo, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@ExceptionHandler({ MethodArgumentNotValidException.class, ConstraintViolationException.class, InfyBankException.class})
+	@ExceptionHandler({ MethodArgumentNotValidException.class, ConstraintViolationException.class,
+			InfyBankException.class })
 	public ResponseEntity<ErrorInfo> constraintAndManvExceptionHandler(Exception exception) {
 		LOGGER.error(exception.getMessage(), exception);
 		String errMsg;
-		if(exception instanceof MethodArgumentNotValidException) {
+		if (exception instanceof MethodArgumentNotValidException) {
 			MethodArgumentNotValidException manve = (MethodArgumentNotValidException) exception;
 			errMsg = manve.getBindingResult().getAllErrors().stream()
 					.map(err -> err.getDefaultMessage()).collect(Collectors.joining(", "));
-		} else if(exception instanceof ConstraintViolationException) {
+		} else if (exception instanceof ConstraintViolationException) {
 			ConstraintViolationException cve = (ConstraintViolationException) exception;
 			errMsg = cve.getConstraintViolations().stream()
 					.map(err -> err.getMessage()).collect(Collectors.joining(", "));

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -15,15 +15,15 @@ import com.infy.entity.Customer;
 import com.infy.exception.InfyBankException;
 import com.infy.repository.CustomerRepository;
 
-@Service(value="customerService")
+@Service(value = "customerService")
 @Transactional
-public class CustomerServiceImpl implements CustomerService{
+public class CustomerServiceImpl implements CustomerService {
 
 	@Autowired
 	CustomerRepository customerRepository;
 	@Autowired
 	Environment environment;
-	
+
 	@Override
 	public List<CustomerDTO> getAllCustomers() throws InfyBankException {
 		Iterable<Customer> customers = customerRepository.findAll();
@@ -36,7 +36,7 @@ public class CustomerServiceImpl implements CustomerService{
 			customerDTO.setDateOfBirth(customer.getDateOfBirth());
 			customerDTOs.add(customerDTO);
 		});
-		if(customerDTOs.isEmpty()) 
+		if (customerDTOs.isEmpty())
 			throw new InfyBankException("Service.CUSTOMERS_NOT_FOUND");
 		return customerDTOs;
 	}
@@ -44,8 +44,7 @@ public class CustomerServiceImpl implements CustomerService{
 	@Override
 	public CustomerDTO getCustomer(Integer customerId) throws InfyBankException {
 		Optional<Customer> optional = customerRepository.findById(customerId);
-		Customer customer = optional.orElseThrow(() ->
-		new InfyBankException("Service.CUSTOMER_NOT_FOUND"));
+		Customer customer = optional.orElseThrow(() -> new InfyBankException("Service.CUSTOMER_NOT_FOUND"));
 		CustomerDTO customerDTO = new CustomerDTO();
 		customerDTO.setCustomerId(customer.getCustomerId());
 		customerDTO.setEmailId(customer.getEmailId());
@@ -67,10 +66,9 @@ public class CustomerServiceImpl implements CustomerService{
 	@Override
 	public void updateCustomer(Integer customerId, String emailId) throws InfyBankException {
 		Optional<Customer> optional = customerRepository.findById(customerId);
-		Customer customer = optional.orElseThrow(() ->
-		new InfyBankException("Service.CUSTOMER_NOT_FOUND"));
+		Customer customer = optional.orElseThrow(() -> new InfyBankException("Service.CUSTOMER_NOT_FOUND"));
 		customer.setEmailId(emailId);
-		
+
 	}
 
 	@Override
@@ -78,7 +76,7 @@ public class CustomerServiceImpl implements CustomerService{
 		Optional<Customer> customer = customerRepository.findById(customerId);
 		customer.orElseThrow(() -> new InfyBankException("Service.CUSTOMER_NOT_FOUND"));
 		customerRepository.deleteById(customerId);
-		
+
 	}
 
 }

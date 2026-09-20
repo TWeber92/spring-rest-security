@@ -2,9 +2,9 @@ package com.infy.api;
 
 import java.util.List;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -42,28 +42,28 @@ public class CustomerAPI {
 
 	@GetMapping("/customer/{customerId}")
 	public ResponseEntity<CustomerDTO> getCustomer(
-			@PathVariable @Min(value = 1, message = "{customer.customerid.invalid}") 
-								 @Max(value = 100, message = "{customer.customerid.invalid}") Integer customerId)
+			@PathVariable @Min(value = 1, message = "{customer.customerid.invalid}") @Max(value = 100, message = "{customer.customerid.invalid}") Integer customerId)
 			throws InfyBankException {
 		CustomerDTO customer = customerService.getCustomer(customerId);
 		return new ResponseEntity<CustomerDTO>(customer, HttpStatus.OK);
 	}
-	
+
 	@PostMapping("/customers")
-	public ResponseEntity<String> addCustomer(@Valid @RequestBody CustomerDTO customerDTO) throws InfyBankException{
+	public ResponseEntity<String> addCustomer(@Valid @RequestBody CustomerDTO customerDTO) throws InfyBankException {
 		Integer customerId = customerService.addCustomer(customerDTO);
 		String successMsg = environment.getProperty("API.INSERT_SUCCESS") + customerId;
 		return new ResponseEntity<String>(successMsg, HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping("/customer/{customerId}")
-	public ResponseEntity<String> updateCustomer(Integer customerId, String emailId) throws InfyBankException{
+	public ResponseEntity<String> updateCustomer(Integer customerId, String emailId) throws InfyBankException {
 		customerService.updateCustomer(customerId, emailId);
 		String successMsg = environment.getProperty("API.UPDATE_SUCCESS");
 		return new ResponseEntity<String>(successMsg, HttpStatus.OK);
 	}
+
 	@DeleteMapping("/customer/{customerId}")
-	public ResponseEntity<String> deleteCustomer(Integer customer) throws InfyBankException{
+	public ResponseEntity<String> deleteCustomer(Integer customer) throws InfyBankException {
 		customerService.deleteCustomer(customer);
 		String successMsg = environment.getProperty("API.DELETE_SUCCESS");
 		return new ResponseEntity<String>(successMsg, HttpStatus.OK);

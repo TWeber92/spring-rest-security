@@ -2,6 +2,7 @@ package com.infy.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 //import org.springframework.http.HttpMethod;
 //import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -45,37 +46,38 @@ import org.springframework.security.web.SecurityFilterChain;
 //}
 @Configuration
 public class SecurityConfig {
-	
+
 	@Bean
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-		.antMatchers("/infybank/customers")
-		.hasAnyRole("ADMIN", "USER")
-		.antMatchers("/infybank/customer/**")
-		.hasRole("ADMIN")
-		.anyRequest().authenticated()
-		.and().httpBasic();
-		http.csrf().disable();
+		http.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/infybank/customers")
+				.hasAnyRole("ADMIN", "USER")
+				.requestMatchers("/infybank/customer/**")
+				.hasRole("ADMIN")
+				.anyRequest().authenticated())
+				.httpBasic(Customizer.withDefaults())
+				.csrf(csrf -> csrf.disable());
 		return http.build();
 	}
+
 	@Bean
 	protected InMemoryUserDetailsManager userDetailsService() throws Exception {
 		InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
 		manager.createUser(User
-	            .withUsername("smith")
-	            .password(passwordEncoder().encode("smith123"))
-	            .roles("ADMIN")
-	            .build());
+				.withUsername("smith")
+				.password(passwordEncoder().encode("smith123"))
+				.roles("ADMIN")
+				.build());
 		manager.createUser(User
-	            .withUsername("tim")
-	            .password(passwordEncoder().encode("tim123"))
-	            .roles("USER")
-	            .build());
+				.withUsername("tim")
+				.password(passwordEncoder().encode("tim123"))
+				.roles("USER")
+				.build());
 		return manager;
 	}
 }
-
