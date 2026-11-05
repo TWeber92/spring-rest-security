@@ -26,13 +26,14 @@ public class SecurityConfig {
 
 	@Bean
 	protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests(auth -> auth
-				.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-				.requestMatchers("/infybank/customers")
-				.hasAnyRole("ADMIN", "USER")
-				.requestMatchers("/infybank/customer/**")
-				.hasRole("ADMIN")
-				.anyRequest().authenticated())
+		http.cors(Customizer.withDefaults())
+				.authorizeHttpRequests(auth -> auth
+						.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+						.requestMatchers("/infybank/customers")
+						.hasAnyRole("ADMIN", "USER")
+						.requestMatchers("/infybank/customer/**")
+						.hasRole("ADMIN")
+						.anyRequest().authenticated())
 				.httpBasic(Customizer.withDefaults())
 				.csrf(csrf -> csrf.disable());
 		return http.build();
